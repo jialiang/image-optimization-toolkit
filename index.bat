@@ -8,15 +8,16 @@ set Quality=%2
 for %%F in (*.png) do (
     if not defined Name (
         set Name=%%~nF
+        goto choose_format
     )
 )
 
-if defined Name (
-    echo PNG image found: %Name%.png
-) else (
-    echo No .png files found.
-    goto end
-)
+echo No PNG image found.
+goto end
+
+:choose_format
+
+echo PNG image found: %Name%.png
 
 if "%Format%"=="avif" goto avif
 if "%Format%"=="webp" goto webp
