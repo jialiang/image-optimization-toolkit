@@ -6,6 +6,7 @@ set Extension=
 set Format=%~1
 set Quality=%~2
 set Lossless=
+set Size=
 set Score=
 
 if "%~1" == "" (
@@ -16,7 +17,7 @@ if "%~1" == "" (
 )
 
 if "%~2" == "" (
-  echo Error: Argument 2 needs to be keyword "lossless" or an integer between 0 and 100.
+  echo Error: Argument 2 needs to be keyword "lossless" or an integer from 0 to 100.
   goto end
 )
 
@@ -70,8 +71,15 @@ if not defined Name (
 
 echo "%Name%.%Extension%" found, coverting to %Format%.
 
+if not exist "history" ( mkdir "history" )
+
+if not exist "history" (
+  echo Error: Unable to create history folder
+  goto end
+)
+
 del "%Name%.%Format%" > nul 2>&1
-del "%Name%.%Format%.%Extension%" > nul 2>&1
+del "%Name%.%Format%.png" > nul 2>&1
 
 if "%Format%" == "avif" (
   avifenc -q %Quality% %Lossless% -s 0 --sharpyuv "%Name%.%Extension%" "%Name%.avif" > nul 2>&1
@@ -91,15 +99,15 @@ if not exist "%Name%.%Format%" (
 )
 
 if "%Format%" == "avif" (
-  avifdec "%Name%.avif" "%Name%.avif.png" > nul 2>&1
+  avifdec "%Name%.%Format%" "%Name%.%Format%.png" > nul 2>&1
 )
 
 if "%Format%" == "webp" (
-  dwebp "%Name%.webp" -o "%Name%.webp.png" > nul 2>&1
+  dwebp "%Name%.%Format%" -o "%Name%.%Format%.png" > nul 2>&1
 )
 
 if "%Format%" == "jxl" (
-  djxl "%Name%.jxl" "%Name%.jxl.png" > nul 2>&1
+  djxl "%Name%.%Format%" "%Name%.%Format%.png" > nul 2>&1
 )
 
 if not exist "%Name%.%Format%.png" (
@@ -118,7 +126,21 @@ if not defined Score (
   goto end
 )
 
-echo "%Name%.%Format%" with quality %~2 has score %Score%.
+set "Score=!Score:~0,6!"
+
+for %%I in ("%Name%.%Format%") do set "Size=%%~zI"
+
+set /a Size=(Size + 1023) / 1024
+
+if %Size% LSS 1 set Size=1
+
+copy "%Name%.%Format%" "./history/%Name%_(Q=%~2)(S=%Score%).%Format%" /Y > nul 2>&1
+
+if not exist "./history/%Name%_(Q=%~2)(S=%Score%).%Format%" (
+  echo "Warning: Unable to write to history folder."
+)
+
+echo "%Name%.%Format%" with quality %~2 and size %Size%KB has score %Score%.
 echo.
 
 :end
