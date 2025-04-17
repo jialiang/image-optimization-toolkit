@@ -1,18 +1,15 @@
 # Image Optimization Toolkit
 
-Generates AVIF, WEBP and JXL from PNG and shows you the SSIMULACRA 2 score so that you can balance size and quality
+Generates AVIF, WEBP and JXL from PNG or JPG and shows you the SSIMULACRA 2 score so that you can balance size and quality
 
 A score of >= 90 means the output is visually lossless.
 
 ## Usage
 
-1. Place your PNG image in the root folder.
-2. Run `index.bat {format} {quality}` where
-   - `format` is one of `avif`, `webp` or `jxl`
-   - `quality` is an integer from 0 to 100
-3. A score is shown in the console and an image of your selected format is generated.
+1. Run `index.bat <avif|webp|jxl> <lossless|0|100> [filename.png|jpg]`.
+2. A score is shown in the console and an image of your selected format is generated.
 
-\*It will only process the first PNG it finds.
+If filename is not provided, it will assume the first PNG/JPG in the current directory.
 
 ## Binaries
 
