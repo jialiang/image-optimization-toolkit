@@ -6,7 +6,7 @@ A score of >= 90 means the output is visually lossless.
 
 ## Usage
 
-1. Run `index.bat <avif|webp|jxl> <lossless|0|100> [filename.png|jpg]`.
+1. Run `iot.bat <avif|webp|jxl> <lossless|0|100> [filename.png|jpg]`.
 2. A score is shown in the console and an image of your selected format is generated.
 
 If filename is not provided, it will assume the first PNG/JPG in the current directory.
