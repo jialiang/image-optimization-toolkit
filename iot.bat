@@ -9,6 +9,8 @@ set Lossless=
 set Size=
 set Score=
 
+set PATH=%PATH%;%~dp0ssimulacra2;%~dp0encoders;
+
 if "%~1" == "" (
   echo Argument 1 needs to be keyword avif, webp or jxl.
   echo Argument 2 needs to be keyword lossless or an integer from 0 to 100.
@@ -115,7 +117,7 @@ if not exist "%Name%.%Format%.png" (
   goto end
 )
 
-for /f %%i in ('ssimulacra2\ssimulacra2.exe "%Name%.%Extension%" "%Name%.%Format%.png"') do (
+for /f %%i in ('"ssimulacra2 "%Name%.%Extension%" "%Name%.%Format%.png""') do (
   set Score=%%i
 )
 
