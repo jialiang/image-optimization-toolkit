@@ -40,3 +40,9 @@ You should update the binaries from time to time. You can either use a package m
 - [LibJXL Releases](https://github.com/libjxl/libjxl/releases) for `cjxl.exe` and `djxl.exe`.
 
 [SSIMULACRA2](https://github.com/cloudinary/ssimulacra2) doesn't provide any precompiled binary so you'll have to build it yourself, but they haven't updated since mid-2023 so you should be good.
+
+Versions of binaries included in repo:
+
+- LibAVIF: v1.4.0
+- WebP: v1.6.0
+- LibJXL: v0.11.2
