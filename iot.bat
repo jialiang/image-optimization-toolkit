@@ -22,6 +22,15 @@ if "%~1" == "" (
 
 set "OutType=%~1"
 
+if not "%OutType%" == "avif" (
+  if not "%OutType%" == "webp" (
+    if not "%OutType%" == "jxl" (
+      echo Error: Argument 1 needs to be keyword "avif", "webp" or "jxl".
+      goto end
+    )
+  )
+)
+
 if "%~2" == "" (
   echo Error: Argument 2 needs to be keyword "lossless" or an integer from 0 to 100.
   goto end
@@ -31,9 +40,26 @@ set "Quality=%~2"
 
 if "%~2" == "lossless" (
   set "Quality=100"
-  
+
   if "%OutType%" == "avif" ( set "Lossless=--lossless" )
   if "%OutType%" == "webp" ( set "Lossless=-lossless" )
+) else (
+  set "InvalidNumber="
+
+  for /f "delims=0123456789" %%A in ("!Quality!") do set "InvalidNumber=%%A"
+
+  if defined InvalidNumber (
+    echo Error: Argument 2 needs to be keyword "lossless" or an integer from 0 to 100.
+    goto end
+  )
+  if !Quality! LSS 0 (
+    echo Error: Argument 2 needs to be keyword "lossless" or an integer from 0 to 100.
+    goto end
+  )
+  if !Quality! GTR 100 (
+    echo Error: Argument 2 needs to be keyword "lossless" or an integer from 0 to 100.
+    goto end
+  )
 )
 
 if not "%~3" == "" (
@@ -41,15 +67,15 @@ if not "%~3" == "" (
     echo Error: "%~3" not found.
     goto end
   )
-  
+
   for %%F in ("%~3") do (
     set "InName=%%~nF"
     set "InType=%%~xF"
   )
-  
+
   if /I "!InType!" == ".png" ( goto found )
   if /I "!InType!" == ".jpg" ( goto found )
-  
+
   echo Error: "%~3" does not have the extension .png or .jpg.
   goto end
 )
