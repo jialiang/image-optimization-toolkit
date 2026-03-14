@@ -14,7 +14,7 @@ Alternatively you can [download this repository as a ZIP file](https://github.co
 
 ## Usage
 
-Run `iot <avif|webp|jxl> <lossless|0|100> [example.png|jpg]` in the command line.
+Run `iot <avif|webp|jxl> <lossless|0-100> [example.png|jpg]` in the command line.
 
 If no filename is provided, the script will assume the first PNG or JPG image it finds in the working folder.
 

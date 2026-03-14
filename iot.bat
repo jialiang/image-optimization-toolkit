@@ -94,7 +94,7 @@ goto end
 set "Input=%InName%%InType%"
 set "Output=%InName%.%OutType%"
 
-echo "%Input%" found, coverting to %OutType%.
+echo "%Input%" found, converting to %OutType%.
 
 if not exist "history" ( mkdir "history" )
 
