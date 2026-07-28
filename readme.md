@@ -43,6 +43,6 @@ You should update the binaries from time to time. You can either use a package m
 
 Versions of binaries included in repo:
 
-- LibAVIF: v1.4.0
+- LibAVIF: v1.4.2
 - WebP: v1.6.0
-- LibJXL: v0.11.2
+- LibJXL: v0.12.0
