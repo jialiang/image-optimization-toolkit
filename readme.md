@@ -1,6 +1,6 @@
 # Image Optimization Toolkit
 
-Generates AVIF, WEBP and JXL from PNG or JPG and shows you the SSIMULACRA 2 score so that you can balance size and quality
+Generates AVIF, WEBP, JXL and JPG from PNG or JPG and shows you the SSIMULACRA 2 score so that you can balance size and quality
 
 A score of ≥ 90 means the output is visually lossless.
 
@@ -14,9 +14,11 @@ Alternatively you can [download this repository as a ZIP file](https://github.co
 
 ## Usage
 
-Run `iot <avif|webp|jxl> <lossless|0-100> [example.png|jpg]` in the command line.
+Run `iot <avif|webp|jxl|jpg> <lossless|0-100> [example.png|jpg]` in the command line.
 
 If no filename is provided, the script will assume the first PNG or JPG image it finds in the working folder.
+
+JPEG has no lossless mode, so `jpg` only accepts a quality from 1 to 100. It also refuses a JPG input, because the output would overwrite it.
 
 Example:
 
@@ -38,11 +40,13 @@ You should update the binaries from time to time. You can either use a package m
 - [LibAVIF Releases](https://github.com/AOMediaCodec/libavif/releases) for `avifenc.exe` and `avifdec.exe`.
 - [WebP Downloads Repository](https://storage.googleapis.com/downloads.webmproject.org/releases/webp/index.html) for `cwebp.exe` and `dwebp.exe`.
 - [LibJXL Releases](https://github.com/libjxl/libjxl/releases) for `cjxl.exe` and `djxl.exe`.
+- [LibJXL v0.11.1](https://github.com/libjxl/libjxl/releases/tag/v0.11.1) for `cjpegli.exe`, the last LibJXL release to bundle it.
 
-[SSIMULACRA2](https://github.com/cloudinary/ssimulacra2) doesn't provide any precompiled binary so you'll have to build it yourself, but they haven't updated since mid-2023 so you should be good.
+[Jpegli](https://github.com/google/jpegli) and [SSIMULACRA2](https://github.com/cloudinary/ssimulacra2) don't provide any precompiled binary so you'll have to build them yourself, but jpegli's encoder output hasn't changed since and SSIMULACRA2 hasn't updated since mid-2023 so you should be good.
 
 Versions of binaries included in repo:
 
 - LibAVIF: v1.4.2
 - WebP: v1.6.0
 - LibJXL: v0.12.0
+- Jpegli: v0.11.1

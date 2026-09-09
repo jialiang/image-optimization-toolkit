@@ -14,21 +14,25 @@ set Score=
 set "PATH=%PATH%;%~dp0ssimulacra2;%~dp0encoders";
 
 if "%~1" == "" (
-  echo Argument 1 needs to be keyword "avif", "webp" or "jxl".
+  echo Argument 1 needs to be keyword "avif", "webp", "jxl" or "jpg".
   echo Argument 2 needs to be keyword "lossless" or an integer from 0 to 100.
+  echo JPEG has no lossless mode, so "jpg" only accepts an integer from 1 to 100.
   echo Argument 3 can be the filename of a PNG/JPG image, otherwise the first PNG/JPG image in the current directory is used.
   goto end
 )
 
 set "OutType=%~1"
 
-if not "%OutType%" == "avif" (
-  if not "%OutType%" == "webp" (
-    if not "%OutType%" == "jxl" (
-      echo Error: Argument 1 needs to be keyword "avif", "webp" or "jxl".
-      goto end
-    )
-  )
+set "IsSupportedType="
+
+if "%OutType%" == "avif" ( set "IsSupportedType=1" )
+if "%OutType%" == "webp" ( set "IsSupportedType=1" )
+if "%OutType%" == "jxl" ( set "IsSupportedType=1" )
+if "%OutType%" == "jpg" ( set "IsSupportedType=1" )
+
+if not defined IsSupportedType (
+  echo Error: Argument 1 needs to be keyword "avif", "webp", "jxl" or "jpg".
+  goto end
 )
 
 if "%~2" == "" (
@@ -39,6 +43,11 @@ if "%~2" == "" (
 set "Quality=%~2"
 
 if "%~2" == "lossless" (
+  if "%OutType%" == "jpg" (
+    echo Error: JPEG has no lossless mode. Argument 2 needs to be an integer from 1 to 100.
+    goto end
+  )
+
   set "Quality=100"
 
   if "%OutType%" == "avif" ( set "Lossless=--lossless" )
@@ -59,6 +68,13 @@ if "%~2" == "lossless" (
   if !Quality! GTR 100 (
     echo Error: Argument 2 needs to be keyword "lossless" or an integer from 0 to 100.
     goto end
+  )
+
+  if "%OutType%" == "jpg" (
+    if !Quality! LSS 1 (
+      echo Error: cjpegli rejects quality 0. Argument 2 needs to be an integer from 1 to 100.
+      goto end
+    )
   )
 )
 
@@ -94,6 +110,16 @@ goto end
 set "Input=%InName%%InType%"
 set "Output=%InName%.%OutType%"
 
+if /I "%Input%" == "%Output%" (
+  echo Error: "%Input%" is already a %OutType% file, converting it would overwrite the input.
+  goto end
+)
+
+REM SSIMULACRA 2 supports JPG, so the jpg output is scored as-is.
+set "Scored=%Output%.png"
+
+if "%OutType%" == "jpg" ( set "Scored=%Output%" )
+
 echo "%Input%" found, converting to %OutType%.
 
 if not exist "history" ( mkdir "history" )
@@ -121,19 +147,23 @@ if "%OutType%" == "jxl" (
   djxl "%Output%" "%Output%.png" > nul 2>&1
 )
 
+if "%OutType%" == "jpg" (
+  cjpegli "%Input%" "%Output%" -q %Quality% -p 2 > nul 2>&1
+)
+
 if not exist "%Output%" (
   echo Error: Failed to create "%Output%".
   goto end
 )
 
-if not exist "%Output%.png" (
-  echo Error: Failed to create "%Output%.png".
+if not exist "%Scored%" (
+  echo Error: Failed to create "%Scored%".
   goto end
 )
 
-for /f %%F in ('ssimulacra2 "%Input%" "%Output%.png"') do ( set "Score=%%F" )
+for /f %%F in ('ssimulacra2 "%Input%" "%Scored%"') do ( set "Score=%%F" )
 
-del "%Output%.png" > nul
+if not "%Scored%" == "%Output%" ( del "%Scored%" > nul )
 
 if not defined Score (
   echo Error: Failed to generate score for "%Output%".
