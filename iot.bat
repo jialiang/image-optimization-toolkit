@@ -14,7 +14,7 @@ set Score=
 set "PATH=%PATH%;%~dp0ssimulacra2;%~dp0encoders";
 
 if "%~1" == "" (
-  echo Argument 1 needs to be keyword "avif", "webp", "jxl" or "jpg".
+  echo Argument 1 needs to be keyword "avif", "webp", "jxl", "jpg" or "jpeg".
   echo Argument 2 needs to be keyword "lossless" or an integer from 0 to 100.
   echo JPEG has no lossless mode, so "jpg" only accepts an integer from 1 to 100.
   echo Argument 3 can be the filename of a PNG/JPG image, otherwise the first PNG/JPG image in the current directory is used.
@@ -22,6 +22,8 @@ if "%~1" == "" (
 )
 
 set "OutType=%~1"
+
+if "%OutType%" == "jpeg" ( set "OutType=jpg" )
 
 set "IsSupportedType="
 
@@ -31,7 +33,7 @@ if "%OutType%" == "jxl" ( set "IsSupportedType=1" )
 if "%OutType%" == "jpg" ( set "IsSupportedType=1" )
 
 if not defined IsSupportedType (
-  echo Error: Argument 1 needs to be keyword "avif", "webp", "jxl" or "jpg".
+  echo Error: Argument 1 needs to be keyword "avif", "webp", "jxl", "jpg" or "jpeg".
   goto end
 )
 
@@ -92,13 +94,14 @@ for %%F in ("%~3") do (
 
 if /I "%InType%" == ".png" ( goto found )
 if /I "%InType%" == ".jpg" ( goto found )
+if /I "%InType%" == ".jpeg" ( goto found )
 
-echo Error: "%~3" does not have the extension .png or .jpg.
+echo Error: "%~3" does not have the extension .png, .jpg or .jpeg.
 goto end
 
 :search_folder
 
-for %%F in (*.png *.jpg) do (
+for %%F in (*.png *.jpg *.jpeg) do (
   set "InName=%%~nF"
   set "InType=%%~xF"
   goto found
