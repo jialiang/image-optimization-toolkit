@@ -11,7 +11,7 @@ set Lossless=
 set Size=
 set Score=
 
-set "PATH=%PATH%;%~dp0ssimulacra2;%~dp0encoders";
+set "PATH=%PATH%;%~dp0ssimulacra2;%~dp0encoders"
 
 if "%~1" == "" (
   echo Argument 1 needs to be keyword "avif", "webp", "jxl", "jpg" or "jpeg".
