@@ -1,5 +1,5 @@
 @echo off
-setlocal enabledelayedexpansion
+setlocal
 
 set InName=
 set InType=
@@ -55,46 +55,48 @@ if "%~2" == "lossless" (
 ) else (
   set "InvalidNumber="
 
-  for /f "delims=0123456789" %%A in ("!Quality!") do set "InvalidNumber=%%A"
+  for /f "delims=0123456789" %%A in ("%Quality%") do set "InvalidNumber=%%A"
 
   if defined InvalidNumber (
     echo Error: Argument 2 needs to be keyword "lossless" or an integer from 0 to 100.
     goto end
   )
-  if !Quality! LSS 0 (
+  if %Quality% LSS 0 (
     echo Error: Argument 2 needs to be keyword "lossless" or an integer from 0 to 100.
     goto end
   )
-  if !Quality! GTR 100 (
+  if %Quality% GTR 100 (
     echo Error: Argument 2 needs to be keyword "lossless" or an integer from 0 to 100.
     goto end
   )
 
   if "%OutType%" == "jpg" (
-    if !Quality! LSS 1 (
+    if %Quality% LSS 1 (
       echo Error: cjpegli rejects quality 0. Argument 2 needs to be an integer from 1 to 100.
       goto end
     )
   )
 )
 
-if not "%~3" == "" (
-  if not exist "%~3" (
-    echo Error: "%~3" not found.
-    goto end
-  )
+if "%~3" == "" ( goto search_folder )
 
-  for %%F in ("%~3") do (
-    set "InName=%%~nF"
-    set "InType=%%~xF"
-  )
-
-  if /I "!InType!" == ".png" ( goto found )
-  if /I "!InType!" == ".jpg" ( goto found )
-
-  echo Error: "%~3" does not have the extension .png or .jpg.
+if not exist "%~3" (
+  echo Error: "%~3" not found.
   goto end
 )
+
+for %%F in ("%~3") do (
+  set "InName=%%~nF"
+  set "InType=%%~xF"
+)
+
+if /I "%InType%" == ".png" ( goto found )
+if /I "%InType%" == ".jpg" ( goto found )
+
+echo Error: "%~3" does not have the extension .png or .jpg.
+goto end
+
+:search_folder
 
 for %%F in (*.png *.jpg) do (
   set "InName=%%~nF"
@@ -170,7 +172,7 @@ if not defined Score (
   goto end
 )
 
-set "Score=!Score:~0,6!"
+set "Score=%Score:~0,6%"
 
 for %%F in ("%Output%") do ( set "Size=%%~zF" )
 
