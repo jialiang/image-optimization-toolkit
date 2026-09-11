@@ -1,8 +1,8 @@
 # Image Optimization Toolkit
 
-Generates AVIF, WEBP, JXL and JPG from PNG or JPG and shows you the SSIMULACRA 2 score so that you can balance size and quality
+**iot.bat:** Generates AVIF, WEBP, JXL and JPG from PNG or JPG and shows you the SSIMULACRA 2 score so that you can balance size and quality. A score of ≥ 90 means the output is visually lossless.
 
-A score of ≥ 90 means the output is visually lossless.
+**opng.bat:** Optimizes PNG images in-place using Oxipng and ECT.
 
 Only works on x64 Windows.
 
@@ -13,6 +13,10 @@ Ideally you would clone this repository with Git.
 Alternatively you can [download this repository as a ZIP file](https://github.com/jialiang/image-optimization-toolkit/archive/refs/heads/master.zip).
 
 ## Usage
+
+Add the folder of `iot.bat` or `opng.bat` to your PATH environment variable to use the `iot` and `opng` commands from anywhere.
+
+### iot.bat
 
 Run `iot <avif|webp|jxl|jpg> <lossless|0-100> [example.png|jpg]` in the command line.
 
@@ -29,7 +33,17 @@ Example:
     - Image `example.avif` is created
     - A copy `example_(Q=90)(S=91.163).avif` is stored in the **history** folder.
 
-Add the folder of `iot.bat` to your PATH environment variable to use the `iot` command from anywhere.
+### opng.bat
+
+Run `opng [path/to/file/or/folder]` in the command line.
+
+If no argument is provided, it sets the current folder as the target.
+
+If the target is a folder, it will recursively optimize every PNG image in-place; if the target is a PNG image, it will only optimize that specific image.
+
+Current configuration might not result in the smallest possible sizes because pushing further means waiting minutes just to save a few bytes.
+
+Animation chunks for APNG and ICC profiles are preserved. Fully transparent pixels have their color values zeroed.
 
 ## Binaries
 
@@ -41,6 +55,8 @@ You should update the binaries from time to time. You can either use a package m
 - [WebP Downloads Repository](https://storage.googleapis.com/downloads.webmproject.org/releases/webp/index.html) for `cwebp.exe` and `dwebp.exe`.
 - [LibJXL Releases](https://github.com/libjxl/libjxl/releases) for `cjxl.exe` and `djxl.exe`.
 - [LibJXL v0.11.1](https://github.com/libjxl/libjxl/releases/tag/v0.11.1) for `cjpegli.exe`, the last LibJXL release to bundle it.
+- [Oxipng Releases](https://github.com/oxipng/oxipng/releases) for `oxipng.exe`.
+- [ECT Releases](https://github.com/fhanau/Efficient-Compression-Tool/releases) for `ect.exe`.
 
 [Jpegli](https://github.com/google/jpegli) and [SSIMULACRA2](https://github.com/cloudinary/ssimulacra2) don't provide any precompiled binary so you'll have to build them yourself, but jpegli's encoder output hasn't changed since and SSIMULACRA2 hasn't updated since mid-2023 so you should be good.
 
@@ -50,3 +66,5 @@ Versions of binaries included in repo:
 - WebP: v1.6.0
 - LibJXL: v0.12.0
 - Jpegli: v0.11.1
+- Oxipng: v10.2.1
+- ECT: v0.9.5
